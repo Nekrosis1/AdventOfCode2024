@@ -10,11 +10,7 @@ namespace AdventOfCode2024.Days
 {
 	public class Day1
 	{
-		public static List<int> SortList(List<int> list){
-			list.Sort();
-			return list;
-		}
-		public static int CompareLists()
+		public static int CalculateDifference()
 		{
 			int totalDifference = 0;
 		InputFormat day1Input = new InputFormat();
@@ -26,7 +22,21 @@ namespace AdventOfCode2024.Days
 				int difference = Math.Abs(num1 - num2);
 				totalDifference += difference;
             }
+				Console.WriteLine($"Difference: {totalDifference}");
 			return totalDifference;
 		}
+
+		public static int CalculateSimilarity(){
+			int totalSimilarity = 0;
+			InputFormat day1Input = new();
+			day1Input.CreateLists();
+			foreach (int element in day1Input.list1){
+				int matchCount = day1Input.list2.Where(e => e == element).Count();
+				totalSimilarity += element * matchCount;
+			}
+			Console.WriteLine($"Similarity: {totalSimilarity}");
+			return totalSimilarity;
+		}
+
 	}
 }
