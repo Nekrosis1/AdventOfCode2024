@@ -8,8 +8,8 @@ namespace AdventOfCode2024
 	{
 		static void Main(string[] args)
 		{
-
-
+			int test = Days.Day1.CompareLists();
+			Console.WriteLine($"difference: {test}");
 		}
 	}
 }

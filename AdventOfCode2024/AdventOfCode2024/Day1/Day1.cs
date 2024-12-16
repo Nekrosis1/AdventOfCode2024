@@ -10,23 +10,23 @@ namespace AdventOfCode2024.Days
 {
 	public class Day1
 	{
-		public int CompareLists()
+		public static List<int> SortList(List<int> list){
+			list.Sort();
+			return list;
+		}
+		public static int CompareLists()
 		{
-		Input day1Input = new Input();
-			day1Input.CreateList();
+			int totalDifference = 0;
+		InputFormat day1Input = new InputFormat();
+			day1Input.CreateLists();
             for (int i = 0; i < day1Input.list1.Count; i++)
             {
-				int num1 = day1Input.list1.IndexOf(i);
-				int num2 = day1Input.list2.IndexOf(i);
-				
+				int num1 = day1Input.list1[i];
+				int num2 = day1Input.list2[i];
+				int difference = Math.Abs(num1 - num2);
+				totalDifference += difference;
             }
-
-
-
-
+			return totalDifference;
 		}
-
-
-
 	}
 }
