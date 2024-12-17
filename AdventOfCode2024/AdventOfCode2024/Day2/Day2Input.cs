@@ -9,7 +9,7 @@ namespace AdventOfCode2024.Day2
 		List<List<int>> reports = new();
 		public List<List<int>> CreateLists()
 		{
-			string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "inputs", "input2test.txt");
+			string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "inputs", "input2.txt");
 
 			string input = File.ReadAllText(filePath);
 
@@ -17,14 +17,12 @@ namespace AdventOfCode2024.Day2
 
 			foreach (string line in lines)
 			{
-				string[] parts = line.Split([' '], StringSplitOptions.RemoveEmptyEntries);
+				string[] parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 				List<int> report = parts.Select(int.Parse).ToList();
 				reports.Add(report);
 
 			};
-
-			Console.WriteLine(reports.ToString());
-			return;
+			return reports;
 		}
 	}
 }

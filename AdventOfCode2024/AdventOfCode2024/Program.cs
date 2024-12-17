@@ -11,9 +11,11 @@ namespace AdventOfCode2024
 		{
 			// _ = Day1Logic.CalculateDifference();
 			// _ = Day1Logic.CalculateSimilarity();
-			Day2Input day2Input= new();
-			day2Input.CreateLists();
-			
+			//Day2Input day2Input= new();
+			//day2Input.CreateLists();
+			int safeCount = Day2Logic.SafeCount();
+			Console.WriteLine(safeCount);
+
 		}
 	}
 }

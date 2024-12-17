@@ -15,7 +15,7 @@
 
 			foreach (string line in lines)
 			{
-				string[] parts = line.Split([' '], StringSplitOptions.RemoveEmptyEntries);
+				string[] parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 				if (parts.Length >= 2)
 				{
 					list1.Add(int.Parse(parts[0]));
