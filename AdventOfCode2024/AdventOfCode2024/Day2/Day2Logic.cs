@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Net;
 
 namespace AdventOfCode2024.Day2
 {
@@ -11,33 +12,138 @@ namespace AdventOfCode2024.Day2
 			List<List<int>> reports = day2Input.CreateLists();
 			foreach (List<int> report in reports)
 			{
-				bool dampened = false;
+				// bool dampened = false;
 				//Console.WriteLine($"Checking List: {string.Join(", ", report)}");
-				(bool, List<int>) result = CheckReport(report);
+				(bool, List<int>) result = CheckReport2(report);
 				if (!result.Item1)
 				{
-					dampened = true;
-					(bool, List<int>) result2 = CheckReport(result.Item2);
-					if (!result2.Item1)
-					{
+						Console.WriteLine(string.Join(", ", result.Item2));
+						Console.WriteLine($"FAIL");
+						Console.WriteLine("\n");
 						continue;
 					}
-					Console.WriteLine($"Damped Result: {result2.Item1}");
+					Console.WriteLine(string.Join(", ", result.Item2));
+					Console.WriteLine($"SUCCESS");
+					Console.WriteLine("\n");
 					safeCount++;
-				}
-				else
-				{
-					Console.WriteLine($"Result: {result.Item1}");
-					safeCount++;
-				}
 			}
 			return safeCount;
 		}
 
+		public static (bool, List<int>) CheckReport2(List<int> report)
+		{
+			bool damped = false;
+			if (report[0] == report[1])
+			{
+				//Console.WriteLine("First two entries are equal, are you even trying?");
+				report.RemoveAt(1);
+				damped = true;
+			}
+			// descending list
+			if (report[0] > report[1])
+			{
+				(bool, List<int>) result = CheckDescending(report);
+				// if failed undamped
+				if (!result.Item1)
+				{
+					if (damped)
+					{
+						// was already damped by report[0]&[1] being eq
+						return (false, report);
+					}
+					(bool, List<int>) isDampedSafe = CheckDescending(result.Item2);
+					if (!isDampedSafe.Item1)
+					{
+						// report got damped and still fails
+						return (false, report);
+					}
+					// descending list success after damping
+					return (true, report);
+				}
+				// descending list success without damping
+				return (true, report);
+			}
+			// ascending list
+			else
+			{
+				(bool, List<int>) result = CheckAscending(report);
+				// if failed undamped
+				if (!result.Item1)
+				{
+					if (damped)
+					{
+						// was already damped by report[0]&[1] being eq
+						return (false, report);
+					}
+					(bool, List<int>) isDampedSafe = CheckAscending(result.Item2);
+					if (!isDampedSafe.Item1)
+					{
+						// report got damped and still fails
+						return (false, report);
+					}
+					// Ascending list success after damping
+					return (true, report);
+				}
+				// Ascending list success without damping
+				return (true, report);
+			}
+		}
+
+		public static (bool, List<int>) CheckDescending(List<int> report)
+		{
+			for (int i = 0; i < report.Count - 1; i++)
+			{
+				// if bad
+				if ((report[i] - report[i+1]) < 1 || (report[i] - report[i+1]) > 3)
+				{
+					// report.RemoveAt(i);
+					List<int> dampedReport = report;
+					dampedReport.RemoveAt(i+1);
+					return (false, dampedReport);
+				}
+			}
+			return (true, report);
+		}
+
+		public static (bool, List<int>) CheckAscending(List<int> report)
+		{
+			for (int i = 0; i < report.Count - 1; i++)
+			{
+				//if bad
+				if ((report[i+1] - report[i]) < 1 || (report[i+1] - report[i]) > 3)
+				{
+					List<int> dampedReport = report;
+					dampedReport.RemoveAt(i+1);
+					return (false, dampedReport);
+				}
+			}
+			return (true, report);
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		// dont judge my pyramids
 		public static (bool, List<int>) CheckReport(List<int> report)
 		{
-				bool firstIsFail = false;
+			bool firstIsFail = false;
 			if (report[0] == report[1])
 			{
 				//Console.WriteLine("First two entries are equal, are you even trying?");
@@ -56,7 +162,7 @@ namespace AdventOfCode2024.Day2
 						if (firstIsFail)
 						{
 							// this is absolutely retarded.
-							return (false, [2,2,2,2]);
+							return (false, [2, 2, 2, 2]);
 						}
 						firstIsFail = true;
 						report.RemoveAt(0);
@@ -68,9 +174,9 @@ namespace AdventOfCode2024.Day2
 				{
 					if ((report[i - 1] - report[i]) < 1 || (report[i - 1] - report[i]) > 3)
 					{
-						if(firstIsFail)
+						if (firstIsFail)
 						{
-							return (false, [2,2,2,2]);
+							return (false, [2, 2, 2, 2]);
 						}
 						report.RemoveAt(i);
 						return (false, report);
@@ -86,7 +192,7 @@ namespace AdventOfCode2024.Day2
 						if (firstIsFail)
 						{
 							// this is absolutely retarded.
-							return (false, [2,2,2,2]);
+							return (false, [2, 2, 2, 2]);
 						}
 						firstIsFail = true;
 						report.RemoveAt(0);
@@ -98,9 +204,9 @@ namespace AdventOfCode2024.Day2
 				{
 					if ((report[i] - report[i - 1]) < 1 || (report[i] - report[i - 1]) > 3)
 					{
-						if(firstIsFail)
+						if (firstIsFail)
 						{
-							return (false, [2,2,2,2]);
+							return (false, [2, 2, 2, 2]);
 						}
 						report.RemoveAt(i);
 						return (false, report);
