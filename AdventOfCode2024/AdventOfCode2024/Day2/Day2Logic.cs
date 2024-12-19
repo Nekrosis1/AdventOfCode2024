@@ -17,12 +17,12 @@ namespace AdventOfCode2024.Day2
 				(bool, List<int>) result = CheckReport2(report);
 				if (!result.Item1)
 				{
-						Console.WriteLine(string.Join(", ", result.Item2));
+						Console.WriteLine(string.Join(", ", report));
 						Console.WriteLine($"FAIL");
 						Console.WriteLine("\n");
 						continue;
 					}
-					Console.WriteLine(string.Join(", ", result.Item2));
+					Console.WriteLine(string.Join(", ", report));
 					Console.WriteLine($"SUCCESS");
 					Console.WriteLine("\n");
 					safeCount++;
@@ -97,7 +97,7 @@ namespace AdventOfCode2024.Day2
 				if ((report[i] - report[i+1]) < 1 || (report[i] - report[i+1]) > 3)
 				{
 					// report.RemoveAt(i);
-					List<int> dampedReport = report;
+					List<int> dampedReport = [.. report];
 					dampedReport.RemoveAt(i+1);
 					return (false, dampedReport);
 				}
@@ -112,7 +112,7 @@ namespace AdventOfCode2024.Day2
 				//if bad
 				if ((report[i+1] - report[i]) < 1 || (report[i+1] - report[i]) > 3)
 				{
-					List<int> dampedReport = report;
+					List<int> dampedReport = [.. report];
 					dampedReport.RemoveAt(i+1);
 					return (false, dampedReport);
 				}
