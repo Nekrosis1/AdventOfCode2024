@@ -22,7 +22,7 @@ namespace AdventOfCode2024.Day2
 					{
 						continue;
 					}
-					Console.WriteLine($"Result: {result.Item2}");
+					Console.WriteLine($"Damped Result: {result2.Item1}");
 					safeCount++;
 				}
 				else
@@ -37,6 +37,7 @@ namespace AdventOfCode2024.Day2
 		// dont judge my pyramids
 		public static (bool, List<int>) CheckReport(List<int> report)
 		{
+				bool firstIsFail = false;
 			if (report[0] == report[1])
 			{
 				//Console.WriteLine("First two entries are equal, are you even trying?");
@@ -45,14 +46,32 @@ namespace AdventOfCode2024.Day2
 			}
 			else if (report[0] > report[1])
 			{
-				// if i need to remove the very first report to succeed, my shit fails,
+				// if I need to remove the very first report to succeed, my shit fails,
 				// I need a special case checking report[0] and report[1] , and then reports [0] and [2]
 				// this seems like an idiotic solution.
+				if ((report[0] - report[1]) < 1 || (report[0] - report[1]) > 3)
+				{
+					if ((report[0] - report[2]) < 1 || (report[0] - report[2]) > 3)
+					{
+						if (firstIsFail)
+						{
+							// this is absolutely retarded.
+							return (false, [2,2,2,2]);
+						}
+						firstIsFail = true;
+						report.RemoveAt(0);
+						// CheckReport(report);
+					}
+				}
 				//Console.WriteLine("Seems like descending list");
 				for (int i = 1; i < report.Count; i++)
 				{
 					if ((report[i - 1] - report[i]) < 1 || (report[i - 1] - report[i]) > 3)
 					{
+						if(firstIsFail)
+						{
+							return (false, [2,2,2,2]);
+						}
 						report.RemoveAt(i);
 						return (false, report);
 					}
@@ -60,11 +79,29 @@ namespace AdventOfCode2024.Day2
 			}
 			else
 			{
+				if ((report[1] - report[0]) < 1 || (report[1] - report[0]) > 3)
+				{
+					if ((report[2] - report[0]) < 1 || (report[2] - report[0]) > 3)
+					{
+						if (firstIsFail)
+						{
+							// this is absolutely retarded.
+							return (false, [2,2,2,2]);
+						}
+						firstIsFail = true;
+						report.RemoveAt(0);
+						// CheckReport(report);
+					}
+				}
 				//Console.WriteLine("Seems like ascending list");
 				for (int i = 1; i < report.Count; i++)
 				{
 					if ((report[i] - report[i - 1]) < 1 || (report[i] - report[i - 1]) > 3)
 					{
+						if(firstIsFail)
+						{
+							return (false, [2,2,2,2]);
+						}
 						report.RemoveAt(i);
 						return (false, report);
 
