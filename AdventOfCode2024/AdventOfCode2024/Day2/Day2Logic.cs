@@ -11,31 +11,50 @@ namespace AdventOfCode2024.Day2
 			List<List<int>> reports = day2Input.CreateLists();
 			foreach (List<int> report in reports)
 			{
+				bool dampened = false;
 				//Console.WriteLine($"Checking List: {string.Join(", ", report)}");
-				bool isSafe = CheckReport(report);
-				Console.WriteLine($"Result: {isSafe}");
-				safeCount = isSafe ? (safeCount +1) : safeCount;
+				(bool, List<int>) result = CheckReport(report);
+				if (!result.Item1)
+				{
+					dampened = true;
+					(bool, List<int>) result2 = CheckReport(result.Item2);
+					if (!result2.Item1)
+					{
+						continue;
+					}
+					Console.WriteLine($"Result: {result.Item2}");
+					safeCount++;
+				}
+				else
+				{
+					Console.WriteLine($"Result: {result.Item1}");
+					safeCount++;
+				}
 			}
 			return safeCount;
 		}
-		
-		// dont judge my pyramids
-		public static bool CheckReport(List<int> report)
-		{
 
+		// dont judge my pyramids
+		public static (bool, List<int>) CheckReport(List<int> report)
+		{
 			if (report[0] == report[1])
 			{
 				//Console.WriteLine("First two entries are equal, are you even trying?");
-				return false;
+				report.RemoveAt(1);
+				return (false, report);
 			}
 			else if (report[0] > report[1])
 			{
+				// if i need to remove the very first report to succeed, my shit fails,
+				// I need a special case checking report[0] and report[1] , and then reports [0] and [2]
+				// this seems like an idiotic solution.
 				//Console.WriteLine("Seems like descending list");
 				for (int i = 1; i < report.Count; i++)
 				{
 					if ((report[i - 1] - report[i]) < 1 || (report[i - 1] - report[i]) > 3)
 					{
-						return false;
+						report.RemoveAt(i);
+						return (false, report);
 					}
 				}
 			}
@@ -44,13 +63,84 @@ namespace AdventOfCode2024.Day2
 				//Console.WriteLine("Seems like ascending list");
 				for (int i = 1; i < report.Count; i++)
 				{
-					if ((report[i] - report[i - 1]) < 1 || (report[i] - report[i-1]) > 3)
+					if ((report[i] - report[i - 1]) < 1 || (report[i] - report[i - 1]) > 3)
 					{
-						return false;
+						report.RemoveAt(i);
+						return (false, report);
+
 					}
 				}
 			}
-			return true;
+			return (true, report);
 		}
 	}
 }
+
+
+// Legacy
+
+//public static bool CheckReport(List<int> report)
+//{
+//	bool dampened = false;
+//	if (report[0] == report[1])
+//	{
+//		//Console.WriteLine("First two entries are equal, are you even trying?");
+//		dampened = true;
+//		report.RemoveAt(1);
+
+//		//return false;
+//	}
+//	if (report[0] > report[1])
+//	{
+//		//Console.WriteLine("Seems like descending list");
+//		for (int i = 1; i < report.Count; i++)
+//		{
+//			if ((report[i - 1] - report[i]) < 1 || (report[i - 1] - report[i]) > 3)
+//			{
+//				if (dampened == false)
+//				{
+//					dampened = true;
+//					report.RemoveAt(i);
+//					// when the first level fails, -2 creates a negative if report[i-1]is requested
+//					if (i > 2)
+//					{
+//						i -= 2;
+//					}
+//					else
+//					{
+//						i--;
+//					}
+//					continue;
+//				}
+//				return false;
+//			}
+//		}
+//	}
+//	else
+//	{
+//		//Console.WriteLine("Seems like ascending list");
+//		for (int i = 1; i < report.Count; i++)
+//		{
+//			if ((report[i] - report[i - 1]) < 1 || (report[i] - report[i - 1]) > 3)
+//			{
+//				if (dampened == false)
+//				{
+//					dampened = true;
+//					report.RemoveAt(i);
+//					// when the first level fails, -2 creates a negative if report[i-1]is requested
+//					if (i > 2)
+//					{
+//						i -= 2;
+//					}
+//					else
+//					{
+//						i--;
+//					}
+//					continue;
+//				}
+//				return false;
+//			}
+//		}
+//	}
+//	return true;
+//}
